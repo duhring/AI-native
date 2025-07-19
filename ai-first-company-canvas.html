@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-First Company Insights Canvas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .canvas-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .canvas-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .canvas-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .canvas-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .video-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(255, 107, 107, 0.1), 
+                rgba(102, 126, 234, 0.1), 
+                rgba(118, 75, 162, 0.1), 
+                rgba(240, 147, 251, 0.1));
+            z-index: -1;
+            border-radius: 15px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:nth-child(even) {
+            background: linear-gradient(135deg, #fff5f5, #fed7d7);
+        }
+
+        .card:nth-child(3n) {
+            background: linear-gradient(135deg, #f0fff4, #c6f6d5);
+        }
+
+        .card:nth-child(4n) {
+            background: linear-gradient(135deg, #fffaf0, #fbd38d);
+        }
+
+        .card:nth-child(5n) {
+            background: linear-gradient(135deg, #f7fafc, #cbd5e0);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .card-timestamp {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .card-summary {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .card-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #4299e1, #3182ce);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+
+        .card-link:hover {
+            background: linear-gradient(45deg, #3182ce, #2b77cb);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+        }
+
+        .key-insight {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 5px 5px 5px 0;
+        }
+
+        .canvas-footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+            color: #718096;
+        }
+
+        @media (max-width: 768px) {
+            .canvas-title {
+                font-size: 2rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+
+        .paint-stroke {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border-radius: 50% 20% 50% 20%;
+            opacity: 0.7;
+            z-index: -1;
+        }
+
+        .paint-splash {
+            position: absolute;
+            bottom: -5px;
+            left: -5px;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #48dbfb, #0abde3);
+            border-radius: 30% 70% 70% 30%;
+            opacity: 0.6;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-container">
+        <div class="canvas-header">
+            <h1 class="canvas-title">AI-First Company Canvas</h1>
+            <p class="canvas-subtitle">Key insights from Dan Shipper's interview on building at the bleeding edge of AI</p>
+            <a href="https://www.youtube.com/watch?v=crMrVozp_h8" class="video-link" target="_blank">
+                🎥 Watch Full Interview
+            </a>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="paint-stroke"></div>
+                <div class="card-header">
+                    <div class="card-number">1</div>
+                    <div class="card-timestamp">0:00 - 0:44</div>
+                </div>
+                <h3 class="card-title">The Bleeding Edge of AI Operations</h3>
+                <p class="card-summary">Dan introduces Every's approach: a 15-person team with a dedicated AI operations head who builds prompts and workflows to automate everything possible. They're pioneering how companies will operate in the AI era.</p>
+                <div>
+                    <span class="key-insight">AI Operations</span>
+                    <span class="key-insight">Bleeding Edge</span>
+                    <span class="key-insight">Automation</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=0s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-splash"></div>
+                <div class="card-header">
+                    <div class="card-number">2</div>
+                    <div class="card-timestamp">4:49 - 7:09</div>
+                </div>
+                <h3 class="card-title">AI Will Reshore American Jobs</h3>
+                <p class="card-summary">Dan's hottest take: AI might be the biggest force for bringing jobs back to America. Cheap intelligence makes expensive services affordable for small companies, and Americans may be better at using AI tools effectively.</p>
+                <div>
+                    <span class="key-insight">Job Reshoring</span>
+                    <span class="key-insight">Economic Impact</span>
+                    <span class="key-insight">Hot Take</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=289s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-stroke"></div>
+                <div class="card-header">
+                    <div class="card-number">3</div>
+                    <div class="card-timestamp">7:09 - 14:27</div>
+                </div>
+                <h3 class="card-title">Claude Code: The Hidden Gem for Non-Coders</h3>
+                <p class="card-summary">People are sleeping on Claude Code for non-technical users. It's not just for programmers - it can process large amounts of text, analyze meeting notes, and work autonomously for 20-30 minutes on complex tasks.</p>
+                <div>
+                    <span class="key-insight">Claude Code</span>
+                    <span class="key-insight">Non-Technical</span>
+                    <span class="key-insight">Autonomous Agents</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=429s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-splash"></div>
+                <div class="card-header">
+                    <div class="card-number">4</div>
+                    <div class="card-timestamp">14:36 - 25:41</div>
+                </div>
+                <h3 class="card-title">AGI Definition: The Leash Test</h3>
+                <p class="card-summary">Dan proposes a new AGI definition based on autonomy: when it becomes profitable to run agents indefinitely without intervention. Like raising a child - the longer the leash, the more mature the AI.</p>
+                <div>
+                    <span class="key-insight">AGI Definition</span>
+                    <span class="key-insight">Autonomy</span>
+                    <span class="key-insight">Profitability</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=876s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-stroke"></div>
+                <div class="card-header">
+                    <div class="card-number">5</div>
+                    <div class="card-timestamp">29:56 - 35:36</div>
+                </div>
+                <h3 class="card-title">The AI Operations Role Revolution</h3>
+                <p class="card-summary">Every company should hire an AI operations lead. Katie Parrott at Every builds prompts and automations so the team can focus on work instead of learning new tools. This role will become essential for competitive advantage.</p>
+                <div>
+                    <span class="key-insight">AI Operations Lead</span>
+                    <span class="key-insight">Process Automation</span>
+                    <span class="key-insight">Team Efficiency</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=1796s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-splash"></div>
+                <div class="card-header">
+                    <div class="card-number">6</div>
+                    <div class="card-timestamp">35:36 - 40:20</div>
+                </div>
+                <h3 class="card-title">Dan's Personal AI Stack</h3>
+                <p class="card-summary">Dan's daily toolkit: ChatGPT o3 with memory for writing and self-reflection, Claude Code for building, Claude Opus 4 for its unique ability to judge writing quality - the first model that can tell if something is actually good.</p>
+                <div>
+                    <span class="key-insight">AI Stack</span>
+                    <span class="key-insight">ChatGPT Memory</span>
+                    <span class="key-insight">Quality Judgment</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=2136s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-stroke"></div>
+                <div class="card-header">
+                    <div class="card-number">7</div>
+                    <div class="card-timestamp">41:28 - 50:11</div>
+                </div>
+                <h3 class="card-title">Compounding Engineering</h3>
+                <p class="card-summary">Every unit of work should make the next unit easier. The Cora team (2 engineers + 15 Claude instances) invented this principle: build prompts and automations that accelerate future development, not just complete current tasks.</p>
+                <div>
+                    <span class="key-insight">Compounding Engineering</span>
+                    <span class="key-insight">Leverage</span>
+                    <span class="key-insight">Team Efficiency</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=2488s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-splash"></div>
+                <div class="card-header">
+                    <div class="card-number">8</div>
+                    <div class="card-timestamp">50:11 - 57:26</div>
+                </div>
+                <h3 class="card-title">Beyond Code: The English Interface</h3>
+                <p class="card-summary">Every's product team doesn't write code anymore - they manage agents. This is the future Cursor's CEO predicts: English becomes the programming language, but knowing code principles remains crucial for context and debugging.</p>
+                <div>
+                    <span class="key-insight">No-Code Future</span>
+                    <span class="key-insight">English Programming</span>
+                    <span class="key-insight">Agent Management</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=3011s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-stroke"></div>
+                <div class="card-header">
+                    <div class="card-number">9</div>
+                    <div class="card-timestamp">57:26 - 1:02:10</div>
+                </div>
+                <h3 class="card-title">The GPT Wrapper Gold Rush</h3>
+                <p class="card-summary">GPT wrappers are amazing and undervalued. Every identifies expensive services (chief of staff, lawyer, therapist) that AI makes affordable for everyone. They test with ChatGPT first, then unbundle successful workflows into dedicated apps.</p>
+                <div>
+                    <span class="key-insight">GPT Wrappers</span>
+                    <span class="key-insight">Service Democratization</span>
+                    <span class="key-insight">Product Strategy</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=3446s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-splash"></div>
+                <div class="card-header">
+                    <div class="card-number">10</div>
+                    <div class="card-timestamp">1:02:10 - 1:08:41</div>
+                </div>
+                <h3 class="card-title">The "Sip Seed" Funding Innovation</h3>
+                <p class="card-summary">Dan created a new funding model: $2M committed from Reid Hoffman, drawable on-demand at a set cap. This preserves creative freedom while providing security. AI makes building cheaper - they built Cora for just $300K including salaries.</p>
+                <div>
+                    <span class="key-insight">Sip Seed</span>
+                    <span class="key-insight">Creative Freedom</span>
+                    <span class="key-insight">Capital Efficiency</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=3730s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-stroke"></div>
+                <div class="card-header">
+                    <div class="card-number">11</div>
+                    <div class="card-timestamp">1:08:46 - 1:17:02</div>
+                </div>
+                <h3 class="card-title">The CEO AI Adoption Predictor</h3>
+                <p class="card-summary">The #1 predictor of successful AI adoption: "Does the CEO use ChatGPT daily?" Companies that succeed have CEOs who lead from the front, share AI wins weekly, and create momentum through internal champions and usage stats.</p>
+                <div>
+                    <span class="key-insight">CEO Leadership</span>
+                    <span class="key-insight">Adoption Predictor</span>
+                    <span class="key-insight">Cultural Change</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=4126s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-splash"></div>
+                <div class="card-header">
+                    <div class="card-number">12</div>
+                    <div class="card-timestamp">1:17:02 - 1:24:14</div>
+                </div>
+                <h3 class="card-title">The Allocation Economy</h3>
+                <p class="card-summary">We're shifting from knowledge work to allocation work. AI handles specialization, humans become model managers. Key future skills: evaluating talent, vision, taste, and knowing when to dive into details. Generalists will thrive again.</p>
+                <div>
+                    <span class="key-insight">Allocation Economy</span>
+                    <span class="key-insight">Manager Skills</span>
+                    <span class="key-insight">Generalists</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=4622s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="paint-stroke"></div>
+                <div class="card-header">
+                    <div class="card-number">13</div>
+                    <div class="card-timestamp">1:24:14 - 1:34:29</div>
+                </div>
+                <h3 class="card-title">Finding Your Unique Shape</h3>
+                <p class="card-summary">Dan's key insight: Don't cargo cult other companies. Follow your "secret desires" - Dan stopped writing to be a "proper CEO" but the business suffered. When he returned to writing-first, everything improved. Build what feels like luxury to you.</p>
+                <div>
+                    <span class="key-insight">Authentic Building</span>
+                    <span class="key-insight">Writing-First</span>
+                    <span class="key-insight">Unique Shape</span>
+                </div>
+                <a href="https://www.youtube.com/watch?v=crMrVozp_h8&t=5054s" class="card-link" target="_blank">
+                    ▶ Watch Segment
+                </a>
+            </div>
+        </div>
+
+        <div class="canvas-footer">
+            <p>Created with ❤️ and AI • Visual Canvas of Key Insights</p>
+            <p>Original interview: <a href="https://www.youtube.com/watch?v=crMrVozp_h8" target="_blank">Dan Shipper on Building AI-First Companies</a></p>
+        </div>
+    </div>
+</body>
+</html>
